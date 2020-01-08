@@ -32,7 +32,7 @@ public class Room
         exits = new HashMap<>();
     }
     
-
+    
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
@@ -62,6 +62,10 @@ public class Room
     public Room getExit(String direction){
         return exits.get(direction);
     }
+    
+    
+
+    //public String 
     
     /** 
      * Retourneer een string met daarin de uitgangen van de ruimte

@@ -26,6 +26,7 @@ public class Game
     public Game() 
     {
         createRooms();
+        createObjects();
         parser = new Parser();
     }
 
@@ -34,33 +35,45 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office, cellar;
-
+        Room throneroom, castlecourtyard, dungeon, thelabyrinth, thebattlefield, avalon;
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
-        cellar = new Room("in the cellar");
-
+        throneroom = new Room("standing in the Throne room");
+        castlecourtyard = new Room("standing in the courtyard of the castle");
+        dungeon = new Room("standing in the Dungeon");
+        thelabyrinth = new Room("standing at the beginning of the labyrinth");
+        thebattlefield = new Room("are entering the battlefield");
+        avalon = new Room("standing in Avalon!");
+        
+        
         // initialise room exits
-        outside.setExits("east" , theater);
-        outside.setExits("south", lab);
-        outside.setExits("west", pub);
+        throneroom.setExits("down" , castlecourtyard);
+        throneroom.setExits("down", dungeon);
+       
 
-        theater.setExits("west", outside);
+        castlecourtyard.setExits("up", throneroom);
+        castlecourtyard.setExits("east", thebattlefield);
+        castlecourtyard.setExits("down", dungeon);
+        
 
-        pub.setExits("east", outside);
+        dungeon.setExits("up", castlecourtyard);
 
-        lab.setExits("north", outside);
-        lab.setExits("east", office);
+        thelabyrinth.setExits("south", thebattlefield);
+       
 
-        office.setExits("west", lab);
-        office.setExits("down", cellar);
+        thebattlefield.setExits("north", thelabyrinth);
+        thebattlefield.setExits("south", avalon);
+        thebattlefield.setExits("west", castlecourtyard);
 
-        cellar.setExits("up", office);
-        currentRoom = outside;  // start game outside
+        avalon.setExits("north", thebattlefield);
+        currentRoom = castlecourtyard;  // start game outside
+    }
+    
+    public void createObjects()
+    {
+        ObjectInRoom object1, object2, object3, object4, object5, object6;
+        object1 = new ObjectInRoom("sleutel", "Open de geheime deur met deze sleutel", "throneroom");
+        object2 = new ObjectInRoom("kaart", "een kaart", "throneroom");
+        object3 = new ObjectInRoom("schakelaar", "de mysterieuze schakelaar", "thelabyrinth");
     }
 
     /**
@@ -192,6 +205,8 @@ public class Game
 
     private void look(){
         System.out.println(currentRoom.getLongDescription());
+      //  System.out.println(currentRoom.getObject());
+        
     }
     
     private void sleep(){
