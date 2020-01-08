@@ -32,6 +32,9 @@ public class Room
         exits = new HashMap<>();
     }
     
+   // ObjectInRoom Attribuut= new ObjectInRoom();
+    
+   // Atr
     
     /**
      * Define the exits of this room.  Every direction either leads
@@ -46,6 +49,10 @@ public class Room
        exits.put(direction, neighbor);
     }
 
+   // public void getAllAtributes()
+    //{
+        
+   // }
     /**
      * @return The description of the room.
      */

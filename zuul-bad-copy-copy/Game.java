@@ -19,6 +19,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Room oldRoom;
 
     /**
      * Create the game and initialise its internal map.
@@ -53,6 +54,7 @@ public class Game
         castlecourtyard.setExits("up", throneroom);
         castlecourtyard.setExits("east", thebattlefield);
         castlecourtyard.setExits("down", dungeon);
+        //castlecourtyard.Attribuut.getObjectName();
         
 
         dungeon.setExits("up", castlecourtyard);
@@ -65,10 +67,11 @@ public class Game
         thebattlefield.setExits("west", castlecourtyard);
 
         avalon.setExits("north", thebattlefield);
-        currentRoom = castlecourtyard;  // start game outside
+        currentRoom = throneroom;  // start game outside
+        //oldRoom = null;
     }
     
-    public void createObjects()
+    private void createObjects()
     {
         ObjectInRoom object1, object2, object3, object4, object5, object6;
         object1 = new ObjectInRoom("sleutel", "Open de geheime deur met deze sleutel", "throneroom");
@@ -135,6 +138,8 @@ public class Game
         }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
+        }else if(commandWord.equals("back")) {
+            goBack();
         }
 
         return wantToQuit;
@@ -162,6 +167,7 @@ public class Game
      */
     private void goRoom(Command command) 
     {
+        
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
@@ -177,9 +183,11 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
+            oldRoom = currentRoom;
             currentRoom = nextRoom;
             printLocationInfo();
         }
+      
     }
 
     /** 
@@ -205,11 +213,16 @@ public class Game
 
     private void look(){
         System.out.println(currentRoom.getLongDescription());
-      //  System.out.println(currentRoom.getObject());
-        
+    //    System.out.println(currentRoom.getObjectDescription());
     }
     
     private void sleep(){
         System.out.println("You slept for a year and are really awake now");
+    }
+    
+    private void goBack(){
+        currentRoom = oldRoom;
+        //oldRoom = currentRoom;
+        printLocationInfo();
     }
 }
