@@ -9,6 +9,7 @@ public class Player
 {
     private String playerName;
     private int carryWeight;
+    private int i;
 
    
     public Player(String playerName, int carryWeight)
