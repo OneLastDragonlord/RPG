@@ -15,11 +15,16 @@
  * @version 2016.02.29
  */
 
+import java.util.EmptyStackException;
+import java.util.Iterator;
+import java.util.Stack;
+
 public class Game 
 {
     private Parser parser;
     private Room currentRoom;
     private Room oldRoom;
+    Stack<Room> stack = new Stack<Room>();
 
     /**
      * Create the game and initialise its internal map.
@@ -27,7 +32,8 @@ public class Game
     public Game() 
     {
         createRooms();
-        createObjects();
+        printObjects();
+        //  createObjects();
         parser = new Parser();
     }
 
@@ -38,29 +44,26 @@ public class Game
     {
         Room throneroom, castlecourtyard, dungeon, thelabyrinth, thebattlefield, avalon;
         // create the rooms
-        throneroom = new Room("standing in the Throne room");
-        castlecourtyard = new Room("standing in the courtyard of the castle");
-        dungeon = new Room("standing in the Dungeon");
-        thelabyrinth = new Room("standing at the beginning of the labyrinth");
-        thebattlefield = new Room("are entering the battlefield");
-        avalon = new Room("standing in Avalon!");
-        
-        
+        throneroom = new Room("standing in the Throne room", "throneroom");
+        castlecourtyard = new Room("standing in the courtyard of the castle", "castlecourtyard");
+        dungeon = new Room("standing in the Dungeon", "dungeon");
+        thelabyrinth = new Room("standing at the beginning of the labyrinth", "thelabyrinth");
+        thebattlefield = new Room("are entering the battlefield", "thebattlefield");
+        avalon = new Room("standing in Avalon!", "avalon");
+
         // initialise room exits
         throneroom.setExits("down" , castlecourtyard);
         throneroom.setExits("down", dungeon);
-       
+        throneroom.addObject( "Throne Room Key","A key with markings that look like a crown");
+
 
         castlecourtyard.setExits("up", throneroom);
         castlecourtyard.setExits("east", thebattlefield);
         castlecourtyard.setExits("down", dungeon);
         //castlecourtyard.Attribuut.getObjectName();
-        
 
         dungeon.setExits("up", castlecourtyard);
-
         thelabyrinth.setExits("south", thebattlefield);
-       
 
         thebattlefield.setExits("north", thelabyrinth);
         thebattlefield.setExits("south", avalon);
@@ -70,13 +73,20 @@ public class Game
         currentRoom = throneroom;  // start game outside
         //oldRoom = null;
     }
-    
-    private void createObjects()
+
+    private void printObjects()
     {
-        ObjectInRoom object1, object2, object3, object4, object5, object6;
-        object1 = new ObjectInRoom("sleutel", "Open de geheime deur met deze sleutel", "throneroom");
-        object2 = new ObjectInRoom("kaart", "een kaart", "throneroom");
-        object3 = new ObjectInRoom("schakelaar", "de mysterieuze schakelaar", "thelabyrinth");
+        for (int i = 0; i <currentRoom.returnList().size();i++){
+            System.out.println(currentRoom.returnList().get(i).getObjectName());
+        }   
+    }
+
+    private void createPlayer()
+    {
+        Player player1, player2;
+        player1 = new Player("pieter", 20);
+        player2 = new Player("bram" , 40);
+
     }
 
     /**
@@ -106,6 +116,7 @@ public class Game
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
+        printObjects();
         System.out.println();
         printLocationInfo();
     }
@@ -167,7 +178,7 @@ public class Game
      */
     private void goRoom(Command command) 
     {
-        
+
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
@@ -183,11 +194,13 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
-            oldRoom = currentRoom;
+            //oldRoom = currentRoom;
+            System.out.println(currentRoom.getName());
+            stack.push(currentRoom);
             currentRoom = nextRoom;
             printLocationInfo();
         }
-      
+
     }
 
     /** 
@@ -213,16 +226,22 @@ public class Game
 
     private void look(){
         System.out.println(currentRoom.getLongDescription());
-    //    System.out.println(currentRoom.getObjectDescription());
+        //    System.out.println(currentRoom.getObjectDescription());
     }
-    
+
     private void sleep(){
         System.out.println("You slept for a year and are really awake now");
     }
-    
+
     private void goBack(){
-        currentRoom = oldRoom;
-        //oldRoom = currentRoom;
-        printLocationInfo();
+        //currentRoom = oldRoom;
+        if(! stack.empty()){
+            currentRoom = stack.peek();
+            //System.out.println(stack.peek());
+            stack.pop();
+            printLocationInfo();
+        }else{
+            System.out.println("You can't go back any further");
+        }
     }
 }

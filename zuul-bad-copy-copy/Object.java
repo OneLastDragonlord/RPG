@@ -4,41 +4,35 @@
  *
  * @author (jouw naam)
  * @version (versie nummer of datum)
- */
-import java.util.Arrays;
+*/
 
-
-public class ObjectInRoom
+public class Object
 {
     // instance variables - vervang deze door jouw variabelen
-        private String objectDescription;
-        private String objectName;
-        private String roomName;
+    private String objectDescription;
+    private String objectName;
+
 
     /**
      * Constructor voor objects van class Item
      */
-    public ObjectInRoom (String objectName, String objectDescription, String roomName) {
+    public Object (String objectName, String objectDescription) {
         this.objectName = objectName;
         this.objectDescription = objectDescription;
     }
-    
+
     public String getObjectName()
     {
         return objectName;
     }
-    
+
     public String getObjectDescription()
     {
         return objectDescription;
     }
-    
-    public String getRoomName()
-    {
-        return roomName; 
-    }
+}
     
 
     
     
-}
+

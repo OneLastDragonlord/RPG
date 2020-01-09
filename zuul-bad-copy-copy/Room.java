@@ -14,27 +14,39 @@
  */
 import java.util.HashMap;
 import java.util.Set;
-
+import java.util.List;
+import java.util.ArrayList;
 public class Room 
 {
     private String description;
     private HashMap<String, Room> exits;
-
+    private String roomName;
+    private ArrayList<Object> objects;
+    
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, String roomName) 
     {
         this.description = description;
+        this.roomName = roomName;
         exits = new HashMap<>();
+        this.objects = new ArrayList<>();
     }
     
-   // ObjectInRoom Attribuut= new ObjectInRoom();
+    //ObjectInRoom Object= new ObjectInRoom();
     
-   // Atr
+   public void addObject(String objectName,String objectDescription){
+        Object object1 = new Object(objectName,objectDescription);
+        objects.add(object1);
+    }
+    
+    public ArrayList<Object> returnList(){
+        return objects;
+    }
     
     /**
      * Define the exits of this room.  Every direction either leads
@@ -61,6 +73,10 @@ public class Room
         return description;
     }
     
+    public String getName()
+    {
+        return roomName;
+    }
     public String getLongDescription()
     {
         return "you are " + description + ".\n" + getExitString();
