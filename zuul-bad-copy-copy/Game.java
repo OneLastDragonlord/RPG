@@ -18,12 +18,14 @@
 import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.ArrayList;
 
 public class Game 
 {
     private Parser parser;
     private Room currentRoom;
     private Room oldRoom;
+    private Player player1 = new Player("Henk" ,7) ;
     Stack<Room> stack = new Stack<Room>();
 
     /**
@@ -32,6 +34,7 @@ public class Game
     public Game() 
     {
         createRooms();
+        createPlayer();
         printObjects();
         //  createObjects();
         parser = new Parser();
@@ -54,7 +57,7 @@ public class Game
         // initialise room exits
         throneroom.setExits("down" , castlecourtyard);
         throneroom.setExits("down", dungeon);
-        throneroom.addObject( "Throne Room Key","A key with markings that look like a crown");
+        throneroom.addItem("key","A key with markings that look like a crown");
 
 
         castlecourtyard.setExits("up", throneroom);
@@ -76,11 +79,26 @@ public class Game
 
     private void printObjects()
     {
-        for (int i = 0; i <currentRoom.returnList().size();i++){
-            System.out.println(currentRoom.returnList().get(i).getObjectName());
+        ArrayList<Object> objectList = currentRoom.returnObjectList();
+        for (int i = 0; i <objectList.size();i++){
+            System.out.println(objectList.get(i).getObjectName());
         }   
     }
-
+    
+     private void printItems()
+    {
+        ArrayList<Item> itemList = currentRoom.returnItemList();
+        for (int i = 0; i <itemList.size();i++){
+            System.out.println(itemList.get(i).getItemName());
+        }   
+    }
+    
+    private void showInventory()
+    {
+        for (int i = 0; i <player1.returnInventory().size();i++){
+            System.out.println(player1.returnInventory().get(i).getItemName());
+        }  
+    }
     private void createPlayer()
     {
         Player player1, player2;
@@ -116,7 +134,6 @@ public class Game
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
-        printObjects();
         System.out.println();
         printLocationInfo();
     }
@@ -149,8 +166,12 @@ public class Game
         }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
-        }else if(commandWord.equals("back")) {
+        }
+        else if(commandWord.equals("back")) {
             goBack();
+        }
+        else if(commandWord.equals("grab")) {
+            grabItem(command);
         }
 
         return wantToQuit;
@@ -202,6 +223,18 @@ public class Game
         }
 
     }
+    
+    private void grabItem(Command command){
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("Grab what?");
+            return;
+        }
+        String itemToGrab = command.getSecondWord();
+        Item itemToRemove = currentRoom.grabItemInRoom(itemToGrab);
+        player1.addItem(itemToRemove);
+        System.out.println(player1.returnInventory());
+    }
 
     /** 
      * "Quit" was entered. Check the rest of the command to see
@@ -226,6 +259,7 @@ public class Game
 
     private void look(){
         System.out.println(currentRoom.getLongDescription());
+        printObjects();
         //    System.out.println(currentRoom.getObjectDescription());
     }
 
@@ -244,4 +278,6 @@ public class Game
             System.out.println("You can't go back any further");
         }
     }
+    
+    
 }

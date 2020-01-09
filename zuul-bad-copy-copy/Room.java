@@ -22,6 +22,7 @@ public class Room
     private HashMap<String, Room> exits;
     private String roomName;
     private ArrayList<Object> objects;
+    private ArrayList<Item> items;
     
     /**
      * Create a room described "description". Initially, it has
@@ -35,17 +36,31 @@ public class Room
         this.roomName = roomName;
         exits = new HashMap<>();
         this.objects = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
     
     //ObjectInRoom Object= new ObjectInRoom();
     
-   public void addObject(String objectName,String objectDescription){
-        Object object1 = new Object(objectName,objectDescription);
-        objects.add(object1);
-    }
+   public void addObject(String objectName,String objectDescription){objects.add(new Object(objectName,objectDescription));}
     
-    public ArrayList<Object> returnList(){
-        return objects;
+ 
+    public ArrayList<Object> returnObjectList(){return objects;}
+    
+    public void addItem(String itemName,String itemDescription){items.add(new Item(itemName,itemDescription));}
+
+    public ArrayList<Item> returnItemList(){return items;}
+    
+    public Item grabItemInRoom(String itemToGrab){
+        System.out.println(itemToGrab);
+        for(int i=0;i<items.size();i++){
+            System.out.println(items.get(i));
+            if (items.get(i).getItemName().contains(itemToGrab)){
+                return items.get(i);
+                
+            }
+            
+        }
+        return null;
     }
     
     /**
@@ -68,23 +83,13 @@ public class Room
     /**
      * @return The description of the room.
      */
-    public String getDescription()
-    {
-        return description;
-    }
+    public String getDescription(){return description;}
     
-    public String getName()
-    {
-        return roomName;
-    }
-    public String getLongDescription()
-    {
-        return "you are " + description + ".\n" + getExitString();
-    }
+    public String getName(){return roomName;}
     
-    public Room getExit(String direction){
-        return exits.get(direction);
-    }
+    public String getLongDescription(){return "you are " + description + ".\n" + getExitString();}
+    
+    public Room getExit(String direction){return exits.get(direction);}
     
     
 

@@ -1,11 +1,4 @@
 
-/**
- * class Item - geef hier een beschrijving van deze class
- *
- * @author (jouw naam)
- * @version (versie nummer of datum)
-*/
-
 public class Object
 {
     // instance variables - vervang deze door jouw variabelen
@@ -21,15 +14,9 @@ public class Object
         this.objectDescription = objectDescription;
     }
 
-    public String getObjectName()
-    {
-        return objectName;
-    }
+    public String getObjectName(){return objectName;}
 
-    public String getObjectDescription()
-    {
-        return objectDescription;
-    }
+    public String getObjectDescription(){return objectDescription;}
 }
     
 

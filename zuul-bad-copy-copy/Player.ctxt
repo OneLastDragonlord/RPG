@@ -1,10 +1,13 @@
 #BlueJ class context
 comment0.target=Player
-comment0.text=\r\n\ class\ Player\ -\ geef\ hier\ een\ beschrijving\ van\ deze\ class\r\n\r\n\ @author\ (jouw\ naam)\r\n\ @version\ (versie\ nummer\ of\ datum)\r\n
 comment1.params=playerName\ carryWeight
 comment1.target=Player(java.lang.String,\ int)
-comment2.params=
-comment2.target=java.lang.String\ getPlayerName()
+comment2.params=item
+comment2.target=void\ addItem(Item)
 comment3.params=
-comment3.target=int\ getPlayerWeight()
-numComments=4
+comment3.target=java.util.ArrayList\ returnInventory()
+comment4.params=
+comment4.target=java.lang.String\ getPlayerName()
+comment5.params=
+comment5.target=int\ getPlayerWeight()
+numComments=6
