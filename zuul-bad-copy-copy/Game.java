@@ -57,22 +57,25 @@ public class Game
         // initialise room exits
         throneroom.setExits("down" , castlecourtyard);
         throneroom.setExits("down", dungeon);
-        throneroom.addItem("key","A key with markings that look like a crown");
-
+        throneroom.addObject("The Round Table", "A round table in the middle of the room with crossed swords on it.");
+        //throneroom.addItem
 
         castlecourtyard.setExits("up", throneroom);
         castlecourtyard.setExits("east", thebattlefield);
         castlecourtyard.setExits("down", dungeon);
-        //castlecourtyard.Attribuut.getObjectName();
+        castlecourtyard.addItem("Throne Room key","A key with markings that look like a crown", 10 );
 
         dungeon.setExits("up", castlecourtyard);
+        
         thelabyrinth.setExits("south", thebattlefield);
+        thelabyrinth.addItem("The Cup of Life" , "A cup depicting a battle between life and death",25 );
 
         thebattlefield.setExits("north", thelabyrinth);
         thebattlefield.setExits("south", avalon);
         thebattlefield.setExits("west", castlecourtyard);
 
         avalon.setExits("north", thebattlefield);
+        avalon.addObject("Hand" , "A hand reaching out from the water");
         currentRoom = throneroom;  // start game outside
         //oldRoom = null;
     }
@@ -81,24 +84,25 @@ public class Game
     {
         ArrayList<Object> objectList = currentRoom.returnObjectList();
         for (int i = 0; i <objectList.size();i++){
-            System.out.println(objectList.get(i).getObjectName());
+            System.out.println(objectList.get(i).getObjectDescription());
         }   
     }
-    
-     private void printItems()
+
+    private void printItems()
     {
         ArrayList<Item> itemList = currentRoom.returnItemList();
         for (int i = 0; i <itemList.size();i++){
-            System.out.println(itemList.get(i).getItemName());
+            System.out.println(itemList.get(i).getItemDescription());
         }   
     }
-    
+
     private void showInventory()
     {
         for (int i = 0; i <player1.returnInventory().size();i++){
             System.out.println(player1.returnInventory().get(i).getItemName());
         }  
     }
+
     private void createPlayer()
     {
         Player player1, player2;
@@ -223,7 +227,7 @@ public class Game
         }
 
     }
-    
+
     private void grabItem(Command command){
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -232,7 +236,12 @@ public class Game
         }
         String itemToGrab = command.getSecondWord();
         Item itemToRemove = currentRoom.grabItemInRoom(itemToGrab);
-        player1.addItem(itemToRemove);
+        if(itemToRemove != null){
+            player1.addItem(itemToRemove);
+            currentRoom.deleteItem(itemToGrab);
+        }else{
+            System.out.println("You can't grab this");
+        }
         System.out.println(player1.returnInventory());
     }
 
@@ -260,7 +269,8 @@ public class Game
     private void look(){
         System.out.println(currentRoom.getLongDescription());
         printObjects();
-        //    System.out.println(currentRoom.getObjectDescription());
+        printItems();
+        // System.out.println(currentRoom.getItemDescription());
     }
 
     private void sleep(){
@@ -278,6 +288,5 @@ public class Game
             System.out.println("You can't go back any further");
         }
     }
-    
-    
+
 }

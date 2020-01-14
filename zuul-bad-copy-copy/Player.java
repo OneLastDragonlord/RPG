@@ -6,12 +6,14 @@ public class Player
     private String playerName;
     private int carryWeight;
     private ArrayList<Item> inventory;
+    private int currentWeight;
     
    
     public Player(String playerName, int carryWeight)
     {
         this.playerName = playerName;
         this.carryWeight = carryWeight; 
+        this.currentWeight = 0;
         this.inventory = new ArrayList<>();
     }
     
@@ -25,4 +27,5 @@ public class Player
     
     public int getPlayerWeight(){ return carryWeight;}
     
+    public int getCurrentWeight(){ return currentWeight;}
 }

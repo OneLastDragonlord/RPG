@@ -1,10 +1,12 @@
 #BlueJ class context
 comment0.target=Item
-comment1.params=itemName\ itemDescription
-comment1.target=Item(java.lang.String,\ java.lang.String)
+comment1.params=itemName\ itemDescription\ itemWeight
+comment1.target=Item(java.lang.String,\ java.lang.String,\ int)
 comment1.text=\r\n\ Constructor\ voor\ items\ van\ class\ Item\r\n
 comment2.params=
 comment2.target=java.lang.String\ getItemName()
 comment3.params=
 comment3.target=java.lang.String\ getItemDescription()
-numComments=4
+comment4.params=
+comment4.target=int\ getItemWeight()
+numComments=5

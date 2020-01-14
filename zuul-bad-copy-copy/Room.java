@@ -23,7 +23,7 @@ public class Room
     private String roomName;
     private ArrayList<Object> objects;
     private ArrayList<Item> items;
-    
+
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -38,31 +38,38 @@ public class Room
         this.objects = new ArrayList<>();
         this.items = new ArrayList<>();
     }
-    
-    //ObjectInRoom Object= new ObjectInRoom();
-    
-   public void addObject(String objectName,String objectDescription){objects.add(new Object(objectName,objectDescription));}
-    
- 
-    public ArrayList<Object> returnObjectList(){return objects;}
-    
-    public void addItem(String itemName,String itemDescription){items.add(new Item(itemName,itemDescription));}
 
+    //ObjectInRoom Object= new ObjectInRoom();
+
+    public void addObject(String objectName,String objectDescription){objects.add(new Object(objectName,objectDescription));}
+
+    public ArrayList<Object> returnObjectList(){return objects;}
+    public void addItem(String itemName,String itemDescription, int itemWeight){items.add(new Item(itemName,itemDescription, itemWeight));}
     public ArrayList<Item> returnItemList(){return items;}
-    
     public Item grabItemInRoom(String itemToGrab){
-        System.out.println(itemToGrab);
+        
         for(int i=0;i<items.size();i++){
-            System.out.println(items.get(i));
+            //System.out.println(items.get(i));
             if (items.get(i).getItemName().contains(itemToGrab)){
+                System.out.println("You grabbed the" + itemToGrab);
                 return items.get(i);
-                
             }
-            
+
         }
         return null;
     }
     
+    public void deleteItem(String itemToRemove)
+    {
+         for(int i=0;i<items.size();i++){
+            //System.out.println(items.get(i));
+            if (items.get(i).getItemName().contains(itemToRemove)){
+                 items.remove(i);
+            }
+
+        }
+    }
+
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
@@ -73,28 +80,27 @@ public class Room
      */
     public void setExits(String direction,Room neighbor) 
     {
-       exits.put(direction, neighbor);
+        exits.put(direction, neighbor);
     }
 
-   // public void getAllAtributes()
+    // public void getAllAtributes()
     //{
-        
-   // }
+
+    // }
     /**
      * @return The description of the room.
      */
     public String getDescription(){return description;}
-    
+
     public String getName(){return roomName;}
-    
+
     public String getLongDescription(){return "you are " + description + ".\n" + getExitString();}
-    
+
     public Room getExit(String direction){return exits.get(direction);}
-    
-    
+
 
     //public String 
-    
+
     /** 
      * Retourneer een string met daarin de uitgangen van de ruimte
      * @return Een omschrijving van de uitgangen
