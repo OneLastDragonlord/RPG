@@ -21,6 +21,19 @@ public class Player
         inventory.add(item);
     }
     
+    public Item getItem(String itemName){
+        for(Item item : inventory){
+            if(item.getItemName().equals(itemName)){
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    public void deleteItem(Item item){
+        inventory.remove(item);
+    }
+    
     public ArrayList<Item> returnInventory(){return inventory;}
 
     public String getPlayerName(){ return playerName;}

@@ -27,6 +27,7 @@ public class Game
     private Room oldRoom;
     private Player player1 = new Player("Henk" ,7) ;
     Stack<Room> stack = new Stack<Room>();
+    private Room throneroom, dungeon, castlecourtyard, thelabyrinth, thebattlefield, avalon;
 
     /**
      * Create the game and initialise its internal map.
@@ -35,67 +36,92 @@ public class Game
     {
         createRooms();
         createPlayer();
-        printObjects();
-        //  createObjects();
         parser = new Parser();
     }
 
     /**
      * Create all the rooms and link their exits together.
+     * Create all items and objects
      */
     private void createRooms()
     {
-        Room throneroom, castlecourtyard, dungeon, thelabyrinth, thebattlefield, avalon;
+        
+        Command throneroomTableCommand, throneroomLockCommand, avalonHandCommand, avalonBoatCommand, dungeonKeyCommand;
         // create the rooms
-        throneroom = new Room("standing in the Throne room", "throneroom");
-        castlecourtyard = new Room("standing in the courtyard of the castle", "castlecourtyard");
-        dungeon = new Room("standing in the Dungeon", "dungeon");
-        thelabyrinth = new Room("standing at the beginning of the labyrinth", "thelabyrinth");
-        thebattlefield = new Room("are entering the battlefield", "thebattlefield");
-        avalon = new Room("standing in Avalon!", "avalon");
+        throneroom = new Room("standing in a large room with high ceilings", "Throne Room");
+        castlecourtyard = new Room("standing in a courtyard in Camelot", "Castle Courtyard");
+        dungeon = new Room("in a very dark and deep place underneath the castle", "Dungeon");
+        thelabyrinth = new Room("standing at the beginning of the labyrinth", "The Labyrinth of Gedref");
+        thebattlefield = new Room("are on a battlefield", "the battlefield of the mages");
+        avalon = new Room("standing near the edge of water", "The Lake of Avalon");
 
         // initialise room exits
         throneroom.setExits("down" , castlecourtyard);
-        throneroom.setExits("down", dungeon);
-        throneroom.addObject("The Round Table", "A round table in the middle of the room with crossed swords on it.");
-        //throneroom.addItem
+        throneroomTableCommand = new Command("drop","sword");
+        throneroomLockCommand = new Command("drop","key");
+        throneroom.addObject("table", "a round table in the middle of the room with crossed swords on it",false,throneroomTableCommand);
+        throneroom.addObject("lock", "a lock in the middle of the room on the floor",false,throneroomLockCommand);
+        throneroom.addItem("crown", "the crown of kings",0,false);
 
         castlecourtyard.setExits("up", throneroom);
         castlecourtyard.setExits("east", thebattlefield);
         castlecourtyard.setExits("down", dungeon);
-        castlecourtyard.addItem("Throne Room key","A key with markings that look like a crown", 10 );
 
         dungeon.setExits("up", castlecourtyard);
-        
+        dungeonKeyCommand = new Command("grab", "key");
+        dungeon.addObject("corpse","a corpse with something shiny in its chest, but you need something sharp to get it out", false, dungeonKeyCommand);
+        dungeon.addItem("key","a key with markings that look like a crown", 10 ,false);
+
         thelabyrinth.setExits("south", thebattlefield);
-        thelabyrinth.addItem("The Cup of Life" , "A cup depicting a battle between life and death",25 );
+        thelabyrinth.addItem("cup" , "a cup depicting a battle between life and death",25 ,false);
 
         thebattlefield.setExits("north", thelabyrinth);
         thebattlefield.setExits("south", avalon);
         thebattlefield.setExits("west", castlecourtyard);
 
         avalon.setExits("north", thebattlefield);
-        avalon.addObject("Hand" , "A hand reaching out from the water");
-        currentRoom = throneroom;  // start game outside
+        avalonHandCommand = new Command("grab", "sword");
+        avalonBoatCommand = new Command("quit", "finish");
+        avalon.addObject("hand" , "a hand reaching out from the water",true,avalonHandCommand);
+        avalon.addObject("boat" , "a boat ready to set sail", false, avalonBoatCommand);
+        avalon.addItem("sword","a sword, it has the name Excalibur engraved in it", 10,false);
+        currentRoom = castlecourtyard;  // start game outside
         //oldRoom = null;
     }
 
+    /**
+     * function to print all objects in the current room
+     */
     private void printObjects()
     {
         ArrayList<Object> objectList = currentRoom.returnObjectList();
-        for (int i = 0; i <objectList.size();i++){
-            System.out.println(objectList.get(i).getObjectDescription());
-        }   
+        if(objectList.size() > 0){
+            for (int i = 0; i <objectList.size();i++){
+                if(objectList.get(i).getVisible()){
+                    System.out.println("There is "+objectList.get(i).getObjectDescription()+ ".\n");
+                }  
+            }
+        }
     }
 
+    /**
+     * function to print all items in the current room
+     */
     private void printItems()
     {
         ArrayList<Item> itemList = currentRoom.returnItemList();
-        for (int i = 0; i <itemList.size();i++){
-            System.out.println(itemList.get(i).getItemDescription());
-        }   
+        if(itemList.size() >0){
+            for (int i = 0; i <itemList.size();i++){
+                if(itemList.get(i).getVisible()){
+                    System.out.println("There is " + itemList.get(i).getItemDescription()+".\n");
+                }
+            }   
+        }
     }
 
+    /**
+     * show inventory
+     */
     private void showInventory()
     {
         for (int i = 0; i <player1.returnInventory().size();i++){
@@ -103,12 +129,13 @@ public class Game
         }  
     }
 
+    /**
+     * create player with max weight limit
+     */
     private void createPlayer()
     {
-        Player player1, player2;
+        Player player1;
         player1 = new Player("pieter", 20);
-        player2 = new Player("bram" , 40);
-
     }
 
     /**
@@ -177,6 +204,12 @@ public class Game
         else if(commandWord.equals("grab")) {
             grabItem(command);
         }
+        else if(commandWord.equals("use")) {
+            useObject(command);
+        }
+        else if(commandWord.equals("drop")) {
+            dropItem(command);
+        }
 
         return wantToQuit;
     }
@@ -190,8 +223,8 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("You are Arthur Pendragon.");
+        System.out.println("You are in Camelot, searching for peace.");
         System.out.println();
         System.out.println("Your command words are:");
         System.out.println(parser.showCommands());
@@ -211,16 +244,17 @@ public class Game
         }
 
         String direction = command.getSecondWord();
-
-        // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
-
+        Room nextRoom;
+        if(direction.equals("dungeon")){
+            nextRoom = dungeon;
+        } else {
+            // Try to leave current room.
+            nextRoom= currentRoom.getExit(direction);
+        }
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            //oldRoom = currentRoom;
-            System.out.println(currentRoom.getName());
             stack.push(currentRoom);
             currentRoom = nextRoom;
             printLocationInfo();
@@ -228,9 +262,12 @@ public class Game
 
     }
 
+    /**
+     * checks for second word, if exists add item to player inventory and remove from room
+     */
     private void grabItem(Command command){
         if(!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
+            // if there is no second word, we don't know what to grab...
             System.out.println("Grab what?");
             return;
         }
@@ -238,11 +275,71 @@ public class Game
         Item itemToRemove = currentRoom.grabItemInRoom(itemToGrab);
         if(itemToRemove != null){
             player1.addItem(itemToRemove);
-            currentRoom.deleteItem(itemToGrab);
+            currentRoom.removeItem(itemToGrab);
         }else{
             System.out.println("You can't grab this");
         }
-        System.out.println(player1.returnInventory());
+        //System.out.println(player1.returnInventory());
+    }
+
+    /**
+     * certain items have special interactions
+     */
+    private void whatObjectIsIt(String object){
+        switch(object){
+            case "hand":
+                avalon.setObjectVisible("hand");
+                dungeon.setObjectVisible("corpse");
+                break;
+            case "corpse":
+                dungeon.setObjectVisible("corpse");
+                throneroom.setObjectVisible("lock");
+            case "lock":
+                throneroom.setObjectVisible("lock");
+                throneroom.setObjectVisible("table");
+            case "table":
+                throneroom.setItemVisible("crown");
+        }
+    }
+
+    /**
+     * checks for second word, if exists add item to player inventory and remove from room
+     */
+    private void dropItem(Command command){
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to drop...
+            System.out.println("Drop what?");
+            return;
+        }
+        String itemToDrop = command.getSecondWord();
+        Item itemToRemove = player1.getItem(itemToDrop);
+        if(itemToRemove != null){
+            currentRoom.addExistingItem(itemToRemove);
+            player1.deleteItem(itemToRemove);
+        }else{
+            System.out.println("You can't drop this, you dont even have this.");
+        }
+        //System.out.println(player1.returnInventory());
+    }
+
+    /**
+     * checks for second word, if exists process the command associated to it
+     */private void useObject(Command command){
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to use...
+            System.out.println("use what?");
+            return;
+        }
+        String objectNameToUse = command.getSecondWord();
+        
+        Object objectToUse = currentRoom.useObjectInRoom(objectNameToUse);
+        if(objectToUse != null){
+            whatObjectIsIt(objectNameToUse);
+            processCommand(objectToUse.getCommand());
+        }else{
+            System.out.println("You can't use this");
+        }
+
     }
 
     /** 
@@ -253,23 +350,35 @@ public class Game
     private boolean quit(Command command) 
     {
         if(command.hasSecondWord()) {
-            System.out.println("Quit what?");
-            return false;
+            if(command.getSecondWord().equals("finish")){
+                System.out.println("You have given Arthur Pendragon peace...");
+                return true;
+            } else {
+                System.out.println("quit what?.." );
+                return false;
+            }
         }
         else {
             return true;  // signal that we want to quit
         }
     }
 
+    /**
+     * prints current location
+     */
     private void printLocationInfo(){
         System.out.println(currentRoom.getLongDescription());
         System.out.println();
     }
 
+    /**
+     * player option to print everything inside the current area
+     */
     private void look(){
         System.out.println(currentRoom.getLongDescription());
         printObjects();
         printItems();
+        System.out.println(currentRoom.getExitString());
         // System.out.println(currentRoom.getItemDescription());
     }
 
@@ -277,6 +386,9 @@ public class Game
         System.out.println("You slept for a year and are really awake now");
     }
 
+    /**
+     * player option to go to the previous room
+     */
     private void goBack(){
         //currentRoom = oldRoom;
         if(! stack.empty()){
@@ -288,5 +400,4 @@ public class Game
             System.out.println("You can't go back any further");
         }
     }
-
 }

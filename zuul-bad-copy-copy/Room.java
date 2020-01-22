@@ -39,37 +39,105 @@ public class Room
         this.items = new ArrayList<>();
     }
 
-    //ObjectInRoom Object= new ObjectInRoom();
-
-    public void addObject(String objectName,String objectDescription){objects.add(new Object(objectName,objectDescription));}
-
-    public ArrayList<Object> returnObjectList(){return objects;}
-    public void addItem(String itemName,String itemDescription, int itemWeight){items.add(new Item(itemName,itemDescription, itemWeight));}
-    public ArrayList<Item> returnItemList(){return items;}
-    public Item grabItemInRoom(String itemToGrab){
-        
-        for(int i=0;i<items.size();i++){
-            //System.out.println(items.get(i));
-            if (items.get(i).getItemName().contains(itemToGrab)){
-                System.out.println("You grabbed the" + itemToGrab);
-                return items.get(i);
+    /**
+     * @return Object that you use, if it doesnt exist returns null
+     */
+    public Object useObjectInRoom(String objectToUse){
+        for(int i=0;i<objects.size();i++){
+            if (objects.get(i).getObjectName().contains(objectToUse)){
+                System.out.println("You used the " + objectToUse);
+                return objects.get(i);
             }
-
         }
         return null;
     }
-    
-    public void deleteItem(String itemToRemove)
-    {
-         for(int i=0;i<items.size();i++){
-            //System.out.println(items.get(i));
-            if (items.get(i).getItemName().contains(itemToRemove)){
-                 items.remove(i);
-            }
 
+    //Object functions
+    /**
+     * adds Object to objects ArrayList
+     */
+    public void addObject(String objectName,String objectDescription,boolean visible,Command command){objects.add(new Object(objectName,objectDescription,visible,command));}
+
+    /**
+     * @return ArrayList objects
+     */
+    public ArrayList<Object> returnObjectList(){return objects;}
+
+    /**
+     * sets the object with the name objectName to the opposite value
+     */
+    public void setObjectVisible(String objectName){
+        for(int i=0;i<objects.size();i++){
+            if (objects.get(i).getObjectName().equals(objectName)){
+                objects.get(i).setVisible();
+            }
         }
     }
 
+    /**
+     * adds Item to ArrayList 
+     */
+    public void addItem(String itemName,String itemDescription, int itemWeight,boolean visible){items.add(new Item(itemName,itemDescription, itemWeight,visible));}
+
+    /**
+     * @return ArrayList items
+     */
+    public ArrayList<Item> returnItemList(){return items;}
+
+    /**
+     * @return grabbed Item if item doesnt exist return null
+     */
+    public Item grabItemInRoom(String itemToGrab){
+        for(int i=0;i<items.size();i++){
+            if (items.get(i).getItemName().contains(itemToGrab)){
+                System.out.println("You grabbed the " + itemToGrab);
+                return items.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * sets the object with the name objectName to the opposite value
+     */
+    public void setItemVisible(String itemName){
+        for(int i=0;i<items.size();i++){
+            if (items.get(i).getItemName().equals(itemName)){
+                items.get(i).setVisible();
+            }
+        }
+    }
+    
+    /**
+     * remove item from arrayList
+     */
+    public void removeItem(String itemToRemove)
+    {
+        for(int i=0;i<items.size();i++){
+            if (items.get(i).getItemName().contains(itemToRemove)){
+                items.remove(i);
+            }
+        }
+    }
+    
+    /**
+     * delete item from arrayList
+     */
+    public void deleteItem(String itemToRemove)
+    {
+        for(int i=0;i<items.size();i++){
+            if (items.get(i).getItemName().contains(itemToRemove)){
+                System.out.println("You dropped the " + itemToRemove);
+                items.remove(i);
+            }
+        }
+    }
+    
+    public void addExistingItem(Item itemToAdd){
+        items.add(itemToAdd);
+    }
+
+    
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
@@ -83,24 +151,27 @@ public class Room
         exits.put(direction, neighbor);
     }
 
-    // public void getAllAtributes()
-    //{
-
-    // }
     /**
      * @return The description of the room.
      */
     public String getDescription(){return description;}
 
+    /**
+     * @return The name of the room.
+     */
     public String getName(){return roomName;}
 
-    public String getLongDescription(){return "you are " + description + ".\n" + getExitString();}
+    /**
+     * @return The long description of the room.
+     */
+    public String getLongDescription(){return "you are " + description + ".\nIt appears to be the " + roomName + ".";}
 
+    /**
+     * @return The exits of the room.
+     */
     public Room getExit(String direction){return exits.get(direction);}
 
-
     //public String 
-
     /** 
      * Retourneer een string met daarin de uitgangen van de ruimte
      * @return Een omschrijving van de uitgangen

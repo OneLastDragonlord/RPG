@@ -1,10 +1,21 @@
 #BlueJ class context
 comment0.target=Object
-comment1.params=objectName\ objectDescription
-comment1.target=Object(java.lang.String,\ java.lang.String)
-comment1.text=\r\n\ Constructor\ voor\ objects\ van\ class\ Item\r\n
+comment1.params=objectName\ objectDescription\ value\ command
+comment1.target=Object(java.lang.String,\ java.lang.String,\ boolean,\ Command)
+comment1.text=\r\n\ Constructor\ voor\ objects\ van\ class\ Item\r\n\ @param\ Command\ for\ the\ next\ command\ associated\ with\ this\ item\r\n
 comment2.params=
 comment2.target=java.lang.String\ getObjectName()
+comment2.text=\r\n\ @return\ object\ name\r\n
 comment3.params=
 comment3.target=java.lang.String\ getObjectDescription()
-numComments=4
+comment3.text=\r\n\ @return\ object\ description\r\n
+comment4.params=
+comment4.target=Command\ getCommand()
+comment4.text=\r\n\ @return\ command\r\n
+comment5.params=
+comment5.target=boolean\ getVisible()
+comment5.text=\r\n\ @return\ boolean\ visibility\r\n
+comment6.params=
+comment6.target=void\ setVisible()
+comment6.text=\r\n\ sets\ boolean\ visibility\r\n
+numComments=7
