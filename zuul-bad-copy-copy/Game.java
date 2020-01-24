@@ -25,7 +25,7 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private Room oldRoom;
-    private Player player1 = new Player("Henk" ,7) ;
+    private Player player1;
     Stack<Room> stack = new Stack<Room>();
     private Room throneroom, dungeon, castlecourtyard, thelabyrinth, thebattlefield, avalon;
 
@@ -38,7 +38,12 @@ public class Game
         createPlayer();
         parser = new Parser();
     }
-
+    
+    public static void main(String[] args){
+        Game game1 = new Game();
+        game1.play();
+    }
+    
     /**
      * Create all the rooms and link their exits together.
      * Create all items and objects
@@ -134,8 +139,7 @@ public class Game
      */
     private void createPlayer()
     {
-        Player player1;
-        player1 = new Player("pieter", 20);
+        player1 = new Player("pieter", 40);
     }
 
     /**
@@ -152,6 +156,7 @@ public class Game
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+            player1.returnInventory();
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -162,8 +167,8 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("Welcome to King Arthur's wanders");
+        System.out.println("King Arthur's wanders is a new game in which you search peace for Arthur Pendragon.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         printLocationInfo();
@@ -273,18 +278,16 @@ public class Game
         }
         String itemToGrab = command.getSecondWord();
         Item itemToRemove = currentRoom.grabItemInRoom(itemToGrab);
-        int itemWeight = itemToRemove.getItemWeight();
-        System.out.println(itemWeight);
         if(itemToRemove != null){
+            whatObjectIsIt(itemToGrab);
+            int itemWeight = itemToRemove.getItemWeight();
             player1.updateCurrentWeight(itemWeight);
-            System.out.println(player1.getCurrentWeight());
             if(player1.correctWeight() == false){
                 System.out.println("You can't carry this much weight");
                 player1.minusCurrentWeight(itemWeight);
             }else{
             player1.addItem(itemToRemove);
             currentRoom.removeItem(itemToGrab);
-
          }
         }else{
             System.out.println("You can't grab this");
@@ -300,15 +303,30 @@ public class Game
             case "hand":
                 avalon.setObjectVisible("hand");
                 dungeon.setObjectVisible("corpse");
+                System.out.println("A voice says: 'The key is with the dead'.");
                 break;
             case "corpse":
                 dungeon.setObjectVisible("corpse");
                 throneroom.setObjectVisible("lock");
+                System.out.println("The corpse falls into an abyss but you hear a soft rumbling above you.."); 
+                break;
             case "lock":
                 throneroom.setObjectVisible("lock");
                 throneroom.setObjectVisible("table");
+                System.out.println("The lock goes down into the ground and a table emerges.." );
+                break;
             case "table":
                 throneroom.setItemVisible("crown");
+                System.out.println("You hear something move behind you..");
+                break;
+            case "crown":
+                thelabyrinth.setItemVisible("cup");
+                System.out.println("You hear a loud rumble in the labyrinth..");
+                break;
+            case "cup":
+                avalon.setObjectVisible("boat");
+                System.out.println("a boat has arrived..");
+                break;
         }
     }
 
@@ -323,8 +341,8 @@ public class Game
         }
         String itemToDrop = command.getSecondWord();
         Item itemToRemove = player1.getItem(itemToDrop);
-        int itemWeight = itemToRemove.getItemWeight();
         if(itemToRemove != null){
+            int itemWeight = itemToRemove.getItemWeight();
             currentRoom.addExistingItem(itemToRemove);
             player1.minusCurrentWeight(itemWeight);
             player1.deleteItem(itemToRemove);
@@ -364,6 +382,7 @@ public class Game
         if(command.hasSecondWord()) {
             if(command.getSecondWord().equals("finish")){
                 System.out.println("You have given Arthur Pendragon peace...");
+                System.exit(0);
                 return true;
             } else {
                 System.out.println("quit what?.." );

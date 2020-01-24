@@ -134,6 +134,7 @@ public class Room
     }
     
     public void addExistingItem(Item itemToAdd){
+        System.out.println("You dropped the " + itemToAdd.getItemName());
         items.add(itemToAdd);
     }
 
