@@ -7,8 +7,7 @@ public class Player
     private int carryWeight;
     private ArrayList<Item> inventory;
     private int currentWeight;
-    
-   
+
     public Player(String playerName, int carryWeight)
     {
         this.playerName = playerName;
@@ -16,11 +15,11 @@ public class Player
         this.currentWeight = 0;
         this.inventory = new ArrayList<>();
     }
-    
+
     public void addItem(Item item){
         inventory.add(item);
     }
-    
+
     public Item getItem(String itemName){
         for(Item item : inventory){
             if(item.getItemName().equals(itemName)){
@@ -29,16 +28,30 @@ public class Player
         }
         return null;
     }
-    
+
+    public void minusCurrentWeight(int itemWeight){this.currentWeight -= itemWeight;}
+
+    public void updateCurrentWeight(int itemWeight){this.currentWeight += itemWeight;}
+
+    public boolean correctWeight(){
+        boolean correctWeight = true;
+        if(this.currentWeight >= this.carryWeight){
+            System.out.println(this.currentWeight);
+            System.out.println(this.carryWeight);
+            correctWeight = false;
+        }
+        return correctWeight;
+    }
+
     public void deleteItem(Item item){
         inventory.remove(item);
     }
-    
+
     public ArrayList<Item> returnInventory(){return inventory;}
 
     public String getPlayerName(){ return playerName;}
-    
+
     public int getPlayerWeight(){ return carryWeight;}
-    
+
     public int getCurrentWeight(){ return currentWeight;}
 }

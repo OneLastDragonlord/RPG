@@ -273,13 +273,23 @@ public class Game
         }
         String itemToGrab = command.getSecondWord();
         Item itemToRemove = currentRoom.grabItemInRoom(itemToGrab);
+        int itemWeight = itemToRemove.getItemWeight();
+        System.out.println(itemWeight);
         if(itemToRemove != null){
+            player1.updateCurrentWeight(itemWeight);
+            System.out.println(player1.getCurrentWeight());
+            if(player1.correctWeight() == false){
+                System.out.println("You can't carry this much weight");
+                player1.minusCurrentWeight(itemWeight);
+            }else{
             player1.addItem(itemToRemove);
             currentRoom.removeItem(itemToGrab);
+
+         }
         }else{
             System.out.println("You can't grab this");
         }
-        //System.out.println(player1.returnInventory());
+                   //System.out.println(player1.returnInventory());
     }
 
     /**
@@ -313,8 +323,10 @@ public class Game
         }
         String itemToDrop = command.getSecondWord();
         Item itemToRemove = player1.getItem(itemToDrop);
+        int itemWeight = itemToRemove.getItemWeight();
         if(itemToRemove != null){
             currentRoom.addExistingItem(itemToRemove);
+            player1.minusCurrentWeight(itemWeight);
             player1.deleteItem(itemToRemove);
         }else{
             System.out.println("You can't drop this, you dont even have this.");
